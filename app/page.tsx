@@ -40,78 +40,78 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white">
+    <main className="min-h-screen bg-slate-50 text-slate-900">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center justify-center px-6 py-16 lg:flex-row lg:gap-16">
         <div className="max-w-xl space-y-6 text-center lg:text-left">
-          <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">DotNet LMS</p>
-          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">A clean LMS frontend with Redux Toolkit auth ready for your .NET API.</h1>
-          <p className="text-lg text-slate-300">Use this as the starting point for student, instructor, and admin flows. The auth state is stored in Redux and can be connected to your ASP.NET backend once endpoints are ready.</p>
+          <p className="text-sm uppercase tracking-[0.35em] text-cyan-700">LMS</p>
+          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">A simple LMS frontend with clean auth and course workflows.</h1>
+          <p className="text-lg text-slate-600">Use this as the starting point for student, instructor, and admin flows. The auth state is stored in Redux and connected to your ASP.NET backend.</p>
         </div>
 
-        <div className="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900/90 p-6 shadow-2xl shadow-black/30">
-          <h2 className="text-2xl font-semibold">Auth starter</h2>
-          <p className="mt-2 text-sm text-slate-300">Choose login or signup, then connect this to your .NET auth API.</p>
+        <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200">
+          <h2 className="text-2xl font-semibold">Welcome</h2>
+          <p className="mt-2 text-sm text-slate-600">Choose login or signup, then continue to your dashboard.</p>
 
           {!isAuthenticated ? (
             <div className="mt-6 space-y-4">
-              <div className="grid grid-cols-2 gap-2 rounded-xl bg-slate-800 p-1">
+              <div className="grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1">
                 <button
                   type="button"
                   onClick={() => setMode("login")}
-                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${mode === "login" ? "bg-cyan-400 text-slate-950" : "text-slate-200 hover:bg-slate-700"}`}
+                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${mode === "login" ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-200"}`}
                 >
                   Login
                 </button>
                 <button
                   type="button"
                   onClick={() => setMode("signup")}
-                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${mode === "signup" ? "bg-cyan-400 text-slate-950" : "text-slate-200 hover:bg-slate-700"}`}
+                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${mode === "signup" ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-200"}`}
                 >
                   Signup
                 </button>
               </div>
 
               {mode === "signup" && (
-                <label className="block text-sm text-slate-200">
+                <label className="block text-sm text-slate-700">
                   Full name
                   <input
                     type="text"
                     value={name}
                     onChange={(event) => setName(event.target.value)}
-                    className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                    className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white"
                     placeholder="Aisha Khan"
                   />
                 </label>
               )}
 
-              <label className="block text-sm text-slate-200">
+              <label className="block text-sm text-slate-700">
                 Email
                 <input
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                  className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white"
                   placeholder="student@dotnetlms.dev"
                 />
               </label>
 
-              <label className="block text-sm text-slate-200">
+              <label className="block text-sm text-slate-700">
                 Password
                 <input
                   type="password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                  className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white"
                   placeholder="••••••••"
                 />
               </label>
 
-              <label className="block text-sm text-slate-200">
+              <label className="block text-sm text-slate-700">
                 Role
                 <select
                   value={role}
                   onChange={(event) => setRole(event.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                  className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white"
                 >
                   <option value="Student">Student</option>
                   <option value="Instructor">Instructor</option>
@@ -123,11 +123,11 @@ export default function Home() {
                 type="button"
                 onClick={mode === "login" ? handleLogin : handleSignup}
                 disabled={status === "loading"}
-                className="w-full rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-200"
+                className="w-full rounded-xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400"
               >
                 {status === "loading" ? (
                   <span className="inline-flex items-center justify-center gap-2">
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950" />
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                     Signing in...
                   </span>
                 ) : mode === "login" ? (
@@ -138,20 +138,20 @@ export default function Home() {
               </button>
             </div>
           ) : (
-            <div className="mt-6 space-y-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-100">
+            <div className="mt-6 space-y-4 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
               <p className="text-base font-semibold">Welcome back, {user?.email}</p>
               <p>Role: {user?.role}</p>
               <button
                 type="button"
                 onClick={() => dispatch(logout())}
-                className="w-full rounded-xl bg-white/10 px-4 py-3 font-semibold text-white transition hover:bg-white/20"
+                className="w-full rounded-xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:bg-slate-700"
               >
                 Log out
               </button>
             </div>
           )}
 
-          <p className="mt-4 text-xs text-slate-400">Next step: replace the mock login with your ASP.NET Identity / JWT endpoint.</p>
+          <p className="mt-4 text-xs text-slate-500">Next step: replace the mock login with your ASP.NET Identity / JWT endpoint.</p>
         </div>
       </section>
     </main>

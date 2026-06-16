@@ -10,7 +10,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "DotNet LMS",
+  title: "Student LMS",
   description: "Learning management system with Redux Toolkit auth",
 };
 

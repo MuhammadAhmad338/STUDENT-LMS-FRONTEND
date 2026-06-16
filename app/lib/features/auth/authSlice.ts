@@ -1,3 +1,4 @@
+import axios from "axios";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5053/api";
@@ -34,24 +35,31 @@ export const login = createAsyncThunk(
     payload: { email: string; password: string; role?: string },
     { rejectWithValue }
   ) => {
-    const res = await fetch(`${API_URL}/Auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) return rejectWithValue("Invalid email or password");
+    try {
+      const res = await axios.post(`${API_URL}/Auth/login`, payload, {
+        timeout: 10000,
+      });
 
-    const data = await res.json();
-    const token = data.token ?? data.accessToken ?? data.jwt ?? null;
+      const data = res.data;
+      const token = data.token ?? data.accessToken ?? data.jwt ?? null;
 
-    if (!token) return rejectWithValue("Token not found in login response");
+      if (!token) {
+        return rejectWithValue("Token not found in login response");
+      }
 
-    setAuthCookie(token);
+      setAuthCookie(token);
 
-    return {
-      email: payload.email,
-      role: payload.role ?? "student",
-    };
+      return {
+        email: payload.email,
+        role: payload.role ?? "student",
+      };
+    } catch (error) {
+      return rejectWithValue(
+        axios.isAxiosError(error)
+          ? error.response?.data?.message ?? "Invalid email or password"
+          : "Invalid email or password"
+      );
+    }
   }
 );
 
@@ -67,24 +75,31 @@ export const signup = createAsyncThunk(
     },
     { rejectWithValue }
   ) => {
-    const res = await fetch(`${API_URL}/Auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) return rejectWithValue("Registration failed");
+    try {
+      const res = await axios.post(`${API_URL}/Auth/signup`, payload, {
+        timeout: 10000,
+      });
 
-    const data = await res.json();
-    const token = data.token ?? data.accessToken ?? data.jwt ?? null;
+      const data = res.data;
+      const token = data.token ?? data.accessToken ?? data.jwt ?? null;
 
-    if (!token) return rejectWithValue("Token not found in signup response");
+      if (!token) {
+        return rejectWithValue("Token not found in signup response");
+      }
 
-    setAuthCookie(token);
+      setAuthCookie(token);
 
-    return {
-      email: payload.email,
-      role: payload.role ?? "student",
-    };
+      return {
+        email: payload.email,
+        role: payload.role ?? "student",
+      };
+    } catch (error) {
+      return rejectWithValue(
+        axios.isAxiosError(error)
+          ? error.response?.data?.message ?? "Registration failed"
+          : "Registration failed"
+      );
+    }
   }
 );
 
