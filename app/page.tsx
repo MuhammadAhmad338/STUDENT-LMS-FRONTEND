@@ -1,65 +1,159 @@
-import Image from "next/image";
+"use client"
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
+import { login, logout, signup } from "@/app/lib/features/auth/authSlice";
 
 export default function Home() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { user, isAuthenticated, status } = useAppSelector((state) => state.auth);
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("fizzatanveer@example.com");
+  const [password, setPassword] = useState("Password123!");
+  const [role, setRole] = useState("Admin");
+
+  const handleLogin = () => {
+    if (!email.trim() || !password.trim()) return;
+    dispatch(login({ email: email.trim(), password, role: role.toLowerCase() }));
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/dashboard");
+    }
+  }, [isAuthenticated, router]);
+
+  const handleSignup = () => {
+    if (!name.trim() || !email.trim() || !password.trim()) return;
+    dispatch(
+      signup({
+        fullName: name.trim(),
+        email: email.trim(),
+        password,
+        department: "CS",
+        role: role.toLowerCase(),
+      })
+    );
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white">
+      <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center justify-center px-6 py-16 lg:flex-row lg:gap-16">
+        <div className="max-w-xl space-y-6 text-center lg:text-left">
+          <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">DotNet LMS</p>
+          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">A clean LMS frontend with Redux Toolkit auth ready for your .NET API.</h1>
+          <p className="text-lg text-slate-300">Use this as the starting point for student, instructor, and admin flows. The auth state is stored in Redux and can be connected to your ASP.NET backend once endpoints are ready.</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900/90 p-6 shadow-2xl shadow-black/30">
+          <h2 className="text-2xl font-semibold">Auth starter</h2>
+          <p className="mt-2 text-sm text-slate-300">Choose login or signup, then connect this to your .NET auth API.</p>
+
+          {!isAuthenticated ? (
+            <div className="mt-6 space-y-4">
+              <div className="grid grid-cols-2 gap-2 rounded-xl bg-slate-800 p-1">
+                <button
+                  type="button"
+                  onClick={() => setMode("login")}
+                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${mode === "login" ? "bg-cyan-400 text-slate-950" : "text-slate-200 hover:bg-slate-700"}`}
+                >
+                  Login
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode("signup")}
+                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${mode === "signup" ? "bg-cyan-400 text-slate-950" : "text-slate-200 hover:bg-slate-700"}`}
+                >
+                  Signup
+                </button>
+              </div>
+
+              {mode === "signup" && (
+                <label className="block text-sm text-slate-200">
+                  Full name
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                    placeholder="Aisha Khan"
+                  />
+                </label>
+              )}
+
+              <label className="block text-sm text-slate-200">
+                Email
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                  placeholder="student@dotnetlms.dev"
+                />
+              </label>
+
+              <label className="block text-sm text-slate-200">
+                Password
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                  placeholder="••••••••"
+                />
+              </label>
+
+              <label className="block text-sm text-slate-200">
+                Role
+                <select
+                  value={role}
+                  onChange={(event) => setRole(event.target.value)}
+                  className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                >
+                  <option value="Student">Student</option>
+                  <option value="Instructor">Instructor</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </label>
+
+              <button
+                type="button"
+                onClick={mode === "login" ? handleLogin : handleSignup}
+                disabled={status === "loading"}
+                className="w-full rounded-xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-200"
+              >
+                {status === "loading" ? (
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950" />
+                    Signing in...
+                  </span>
+                ) : mode === "login" ? (
+                  "Sign in"
+                ) : (
+                  "Create account"
+                )}
+              </button>
+            </div>
+          ) : (
+            <div className="mt-6 space-y-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-100">
+              <p className="text-base font-semibold">Welcome back, {user?.email}</p>
+              <p>Role: {user?.role}</p>
+              <button
+                type="button"
+                onClick={() => dispatch(logout())}
+                className="w-full rounded-xl bg-white/10 px-4 py-3 font-semibold text-white transition hover:bg-white/20"
+              >
+                Log out
+              </button>
+            </div>
+          )}
+
+          <p className="mt-4 text-xs text-slate-400">Next step: replace the mock login with your ASP.NET Identity / JWT endpoint.</p>
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }
