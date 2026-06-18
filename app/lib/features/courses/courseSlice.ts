@@ -18,9 +18,7 @@ const initialState: CoursesState = {
 
 export const fetchCourses = createAsyncThunk("courses/fetchCourses", async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${API_URL}/Courses`, {
-      timeout: 10000,
-    });
+    const response = await axios.get(`${API_URL}/Courses`);
 
     const data = response.data;
 

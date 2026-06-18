@@ -1,5 +1,4 @@
 "use client"
-
 import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -111,12 +110,13 @@ export default function DashboardPage() {
               </article>
 
               <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200">
-                <h2 className="text-xl font-semibold">Quick notes</h2>
-                <ul className="mt-4 space-y-3 text-sm text-slate-600">
-                  <li className="rounded-2xl bg-slate-50 p-4">Review pending assignments for the current week.</li>
-                  <li className="rounded-2xl bg-slate-50 p-4">Share the latest course progress report with instructors.</li>
-                  <li className="rounded-2xl bg-slate-50 p-4">Update enrollment statuses before Friday.</li>
-                </ul>
+                <h2 className="text-xl font-semibold">How to enroll a student</h2>
+                <ol className="mt-4 space-y-3 text-sm text-slate-600">
+                  <li className="rounded-2xl bg-slate-50 p-4">Open the course catalog from the dashboard.</li>
+                  <li className="rounded-2xl bg-slate-50 p-4">Click “Enroll now” on the course card you want the student to join.</li>
+                  <li className="rounded-2xl bg-slate-50 p-4">Confirm the enrollment status in the dashboard and continue with the student record.</li>
+                </ol>
+                <Link href="/courses" className="mt-5 inline-flex rounded-xl bg-cyan-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-800">Go to courses</Link>
               </aside>
             </div>
           </div>

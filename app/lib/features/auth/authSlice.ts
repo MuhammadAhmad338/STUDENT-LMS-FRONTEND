@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5053/api";
 
 interface AuthState {
-  user: { email: string; role: string } | null;
+  user: { email: string; role: string; id?: number } | null;
   isAuthenticated: boolean;
   status: "idle" | "loading" | "failed";
   error: string | null;
@@ -36,12 +36,19 @@ export const login = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const res = await axios.post(`${API_URL}/Auth/login`, payload, {
-        timeout: 10000,
-      });
+      const res = await axios.post(`${API_URL}/Auth/login`, payload);
 
       const data = res.data;
       const token = data.token ?? data.accessToken ?? data.jwt ?? null;
+      const rawUserId =
+        data.userId ??
+        data.id ??
+        data.studentId ??
+        data.user?.id ??
+        data.user?.studentId ??
+        null;
+      const parsedUserId = rawUserId != null ? Number(rawUserId) : NaN;
+      const userId = Number.isFinite(parsedUserId) ? parsedUserId : undefined;
 
       if (!token) {
         return rejectWithValue("Token not found in login response");
@@ -52,6 +59,7 @@ export const login = createAsyncThunk(
       return {
         email: payload.email,
         role: payload.role ?? "student",
+        id: userId,
       };
     } catch (error) {
       return rejectWithValue(
@@ -82,6 +90,15 @@ export const signup = createAsyncThunk(
 
       const data = res.data;
       const token = data.token ?? data.accessToken ?? data.jwt ?? null;
+      const rawUserId =
+        data.userId ??
+        data.id ??
+        data.studentId ??
+        data.user?.id ??
+        data.user?.studentId ??
+        null;
+      const parsedUserId = rawUserId != null ? Number(rawUserId) : NaN;
+      const userId = Number.isFinite(parsedUserId) ? parsedUserId : undefined;
 
       if (!token) {
         return rejectWithValue("Token not found in signup response");
@@ -92,6 +109,7 @@ export const signup = createAsyncThunk(
       return {
         email: payload.email,
         role: payload.role ?? "student",
+        id: userId,
       };
     } catch (error) {
       return rejectWithValue(
@@ -109,11 +127,12 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess: (
       state,
-      action: PayloadAction<{ email: string; role?: string }>
+      action: PayloadAction<{ email: string; role?: string; id?: number }>
     ) => {
       state.user = {
         email: action.payload.email,
         role: action.payload.role ?? "student",
+        id: action.payload.id,
       };
       state.isAuthenticated = true;
       state.status = "idle";
