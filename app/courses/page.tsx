@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
-import { fetchCourses } from "@/app/lib/features/courses/courseSlice";
-import { enrollInCourse, fetchStudentEnrollments } from "@/app/lib/features/enrollments/enrollmentSlice";
+import { fetchCourses } from "@/app/lib/Slices/courses/courseSlice";
+import { enrollInCourse, fetchStudentEnrollments } from "@/app/lib/Slices/enrollments/enrollmentSlice";
 
 export default function CoursesPage() {
   const dispatch = useAppDispatch();

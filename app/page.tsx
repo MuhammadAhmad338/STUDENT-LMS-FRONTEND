@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
-import { login, logout, signup } from "@/app/lib/features/auth/authSlice";
+import { login, logout, signup } from "@/app/lib/Slices/auth/authSlice";
 
 export default function Home() {
   const router = useRouter();

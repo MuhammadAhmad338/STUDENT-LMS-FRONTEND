@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { logout } from "@/app/lib/features/auth/authSlice";
+import { logout } from "@/app/lib/Slices/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
-import { fetchCourses } from "@/app/lib/features/courses/courseSlice";
+import { fetchCourses } from "@/app/lib/Slices/courses/courseSlice";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -32,14 +32,23 @@ export default function DashboardPage() {
           </div>
 
           <nav className="mt-8 space-y-2 text-sm text-slate-700">
-            {['Overview', 'Courses', 'Students', 'Reports', 'Settings'].map((item) => (
-              <button
-                key={item}
-                type="button"
-                className="flex w-full items-center rounded-xl bg-slate-100 px-4 py-3 text-left transition hover:bg-slate-200"
+            {[
+              { label: 'Overview', href: '/dashboard' },
+              { label: 'Courses', href: '/courses' },
+              { label: 'Students', href: '/students' },
+              { label: 'Reports', href: '#' },
+              { label: 'Settings', href: '#' },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`flex w-full items-center rounded-xl px-4 py-3 text-left transition ${item.label === 'Overview'
+                    ? 'bg-cyan-50 text-cyan-900 font-semibold border border-cyan-200'
+                    : 'bg-slate-100 hover:bg-slate-200'
+                  }`}
               >
-                {item}
-              </button>
+                {item.label}
+              </Link>
             ))}
           </nav>
 

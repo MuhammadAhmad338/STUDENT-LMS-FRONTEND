@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { login, logout, signup } from "@/app/lib/features/auth/authSlice";
+import { login, logout, signup } from "@/app/lib/Slices/auth/authSlice";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5053/api";
 
