@@ -30,7 +30,7 @@ export default function StudentsPage() {
     router.replace("/");
   };
 
-  const filtered = students.filter((s) => {
+  const filteredStudents = students.filter((s) => {
     const name = (s.fullName ?? s.name ?? "").toLowerCase();
     const email = (s.email ?? "").toLowerCase();
     const dept = (s.department ?? "").toLowerCase();
@@ -55,8 +55,8 @@ export default function StudentsPage() {
                 key={item.label}
                 href={item.href}
                 className={`flex w-full items-center rounded-xl px-4 py-3 text-left transition ${item.label === "Students"
-                    ? "bg-cyan-50 text-cyan-900 font-semibold border border-cyan-200"
-                    : "bg-slate-100 hover:bg-slate-200"
+                  ? "bg-cyan-50 text-cyan-900 font-semibold border border-cyan-200"
+                  : "bg-slate-100 hover:bg-slate-200"
                   }`}
               >
                 {item.label}
@@ -107,7 +107,7 @@ export default function StudentsPage() {
             {/* Student count badge */}
             <div className="mb-6 flex items-center gap-3">
               <span className="rounded-full bg-cyan-50 border border-cyan-200 px-3 py-1 text-xs font-semibold text-cyan-800">
-                {status === "loading" ? "Loading…" : `${filtered.length} student${filtered.length !== 1 ? "s" : ""}`}
+                {status === "loading" ? "Loading…" : `${filteredStudents.length} student${filteredStudents.length !== 1 ? "s" : ""}`}
               </span>
               {search && (
                 <button
@@ -130,7 +130,7 @@ export default function StudentsPage() {
               </div>
             ) : error ? (
               <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-sm text-rose-700">{error}</div>
-            ) : filtered.length === 0 ? (
+            ) : filteredStudents.length === 0 ? (
               <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-600">
                 <p className="text-lg font-semibold text-slate-900">No students found</p>
                 <p className="mt-2 text-sm">
@@ -151,7 +151,7 @@ export default function StudentsPage() {
 
                 {/* Table rows */}
                 <div className="divide-y divide-slate-100">
-                  {filtered.map((student, index) => {
+                  {filteredStudents.map((student, index) => {
                     const id = student.id ?? student.studentId ?? index;
                     const name = student.fullName ?? student.name ?? "—";
                     const email = student.email ?? "—";
