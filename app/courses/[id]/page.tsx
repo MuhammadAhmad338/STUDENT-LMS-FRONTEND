@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -162,7 +162,6 @@ export default function CourseDetailPage() {
   }
 
   /* ── not found ───────────────────────────────────────────────────── */
-  /* ── not found ───────────────────────────────────────────────────── */
   if (!course && courses.length > 0) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-6 text-center">
@@ -286,10 +285,10 @@ export default function CourseDetailPage() {
                   onClick={handleEnroll}
                   disabled={isEnrolled || enrollStatus === "loading"}
                   className={`mt-6 w-full rounded-xl px-4 py-3 text-sm font-semibold transition ${isEnrolled
-                      ? "cursor-default bg-emerald-50 text-emerald-900 border border-emerald-200"
-                      : enrollStatus === "loading"
-                        ? "cursor-wait bg-slate-100 text-slate-400"
-                        : "bg-slate-900 text-white hover:bg-slate-700"
+                    ? "cursor-default bg-emerald-50 text-emerald-900 border border-emerald-200"
+                    : enrollStatus === "loading"
+                      ? "cursor-wait bg-slate-100 text-slate-400"
+                      : "bg-slate-900 text-white hover:bg-slate-700"
                     }`}
                 >
                   {isEnrolled ? (
@@ -346,8 +345,8 @@ export default function CourseDetailPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`px-6 py-4 text-sm font-semibold transition border-b-2 -mb-[2px] ${activeTab === tab.id
-                      ? "border-cyan-700 text-cyan-900 font-bold"
-                      : "border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    ? "border-cyan-700 text-cyan-900 font-bold"
+                    : "border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                     }`}
                 >
                   {tab.label}
@@ -484,8 +483,8 @@ export default function CourseDetailPage() {
             onClick={handleEnroll}
             disabled={isEnrolled || enrollStatus === "loading"}
             className={`shrink-0 rounded-xl px-6 py-2.5 text-sm font-semibold transition ${isEnrolled
-                ? "bg-emerald-50 text-emerald-900 border border-emerald-200 cursor-default"
-                : "bg-slate-900 text-white hover:bg-slate-700"
+              ? "bg-emerald-50 text-emerald-900 border border-emerald-200 cursor-default"
+              : "bg-slate-900 text-white hover:bg-slate-700"
               }`}
           >
             {isEnrolled ? "Enrolled" : "Enroll now"}
