@@ -40,7 +40,7 @@ export default function ReportsPage() {
   // Calculations for Reports
   const totalCourses = courses.length;
   const totalStudents = students.length;
-  
+
   // Calculate average course credits
   const totalCredits = courses.reduce((acc, c) => acc + (c.credits ?? 0), 0);
   const avgCredits = totalCourses > 0 ? (totalCredits / totalCourses).toFixed(1) : "0.0";
@@ -55,7 +55,7 @@ export default function ReportsPage() {
   // Group students by Department
   const departmentCounts: Record<string, number> = {};
   students.forEach((s) => {
-    const dept = s.department ?? s.dept ?? "CS";
+    const dept = s.department ?? s.department ?? "CS";
     departmentCounts[dept] = (departmentCounts[dept] ?? 0) + 1;
   });
 
@@ -147,7 +147,7 @@ export default function ReportsPage() {
                   <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200">
                     <h2 className="text-xl font-semibold text-slate-900">Courses by Category</h2>
                     <p className="mt-1 text-sm text-slate-500">Distribution of educational catalog courses</p>
-                    
+
                     <div className="mt-6 space-y-4">
                       {Object.keys(categoryCounts).length === 0 ? (
                         <p className="text-sm text-slate-500">No courses category records found.</p>
