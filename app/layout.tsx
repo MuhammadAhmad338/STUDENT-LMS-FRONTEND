@@ -10,8 +10,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Student LMS",
-  description: "Learning management system with Redux Toolkit auth",
+  title: "CourseFlow",
+  description: "Advanced course management and enrollment platform",
 };
 
 export default function RootLayout({

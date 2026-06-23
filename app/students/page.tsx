@@ -10,8 +10,8 @@ const sidebarItems = [
   { label: "Overview", href: "/dashboard" },
   { label: "Courses", href: "/courses" },
   { label: "Students", href: "/students" },
-  { label: "Reports", href: "#" },
-  { label: "Settings", href: "#" },
+  { label: "Reports", href: "/reports" },
+  { label: "Settings", href: "/settings" },
 ];
 
 export default function StudentsPage() {
@@ -44,7 +44,7 @@ export default function StudentsPage() {
         {/* ── Sidebar ── */}
         <aside className="hidden w-72 flex-col border-r border-slate-200 bg-white p-6 lg:flex">
           <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-cyan-700">LMS</p>
+            <p className="text-xs uppercase tracking-[0.35em] text-cyan-700 font-bold">CourseFlow</p>
             <h2 className="mt-3 text-xl font-semibold">Admin Panel</h2>
             <p className="mt-2 text-sm text-slate-600">Manage students, courses, and reports from one place.</p>
           </div>
@@ -185,7 +185,7 @@ export default function StudentsPage() {
           </div>
 
           <footer className="border-t border-slate-200 bg-white px-6 py-4 text-sm text-slate-600">
-            © 2026 DotNet LMS. Built for admin and student dashboards.
+            © 2026 CourseFlow. Built for admin and student dashboards.
           </footer>
         </section>
       </div>

@@ -44,8 +44,8 @@ export default function Home() {
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center justify-center px-6 py-16 lg:flex-row lg:gap-16">
         <div className="max-w-xl space-y-6 text-center lg:text-left">
-          <p className="text-sm uppercase tracking-[0.35em] text-cyan-700">LMS</p>
-          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">A simple LMS frontend with clean auth and course workflows.</h1>
+          <p className="text-sm uppercase tracking-[0.35em] text-cyan-700 font-bold">CourseFlow</p>
+          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">A simple course enrollment platform with clean workflows.</h1>
           <p className="text-lg text-slate-600">Use this as the starting point for student, instructor, and admin flows. The auth state is stored in Redux and connected to your ASP.NET backend.</p>
         </div>
 

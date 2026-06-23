@@ -59,7 +59,7 @@ export const login = createAsyncThunk(
       return {
         email: payload.email,
         role: payload.role ?? "student",
-        id: userId,
+        id: userId
       };
     } catch (error) {
       return rejectWithValue(
@@ -89,19 +89,42 @@ export const signup = createAsyncThunk(
       });
 
       const data = res.data;
-      const token = data.token ?? data.accessToken ?? data.jwt ?? null;
-      const rawUserId =
+      let token = data.token ?? data.accessToken ?? data.jwt ?? null;
+      let rawUserId =
         data.userId ??
         data.id ??
         data.studentId ??
         data.user?.id ??
         data.user?.studentId ??
         null;
+
+      // If the backend doesn't return a login token on signup, perform an automatic background login call
+      if (!token) {
+        try {
+          const loginRes = await axios.post(`${API_URL}/Auth/login`, {
+            email: payload.email,
+            password: payload.password,
+            role: payload.role ?? "Student",
+          });
+          const loginData = loginRes.data;
+          token = loginData.token ?? loginData.accessToken ?? loginData.jwt ?? null;
+          rawUserId =
+            loginData.userId ??
+            loginData.id ??
+            loginData.studentId ??
+            loginData.user?.id ??
+            loginData.user?.studentId ??
+            null;
+        } catch (loginErr) {
+          return rejectWithValue("Signup succeeded, but automatic login failed. Please sign in manually.");
+        }
+      }
+
       const parsedUserId = rawUserId != null ? Number(rawUserId) : NaN;
       const userId = Number.isFinite(parsedUserId) ? parsedUserId : undefined;
 
       if (!token) {
-        return rejectWithValue("Token not found in signup response");
+        return rejectWithValue("Token not found in authentication response");
       }
 
       setAuthCookie(token);
