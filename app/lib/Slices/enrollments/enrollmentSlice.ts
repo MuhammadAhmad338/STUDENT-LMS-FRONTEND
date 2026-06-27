@@ -16,11 +16,30 @@ interface EnrollmentState {
     } | null;
 }
 
+const loadFromLocalStorage = (): number[] => {
+    if (typeof window === "undefined") return [];
+    try {
+        const saved = localStorage.getItem("enrolledCourseIds");
+        return saved ? JSON.parse(saved) : [];
+    } catch {
+        return [];
+    }
+};
+
+const saveToLocalStorage = (courseIds: number[]) => {
+    if (typeof window === "undefined") return;
+    try {
+        localStorage.setItem("enrolledCourseIds", JSON.stringify(courseIds));
+    } catch {
+        // Ignore storage errors
+    }
+};
+
 const initialState: EnrollmentState = {
     status: "idle",
     fetchStatus: "idle",
     error: null,
-    enrolledCourseIds: [],
+    enrolledCourseIds: loadFromLocalStorage(),
     lastEnrollment: null,
 };
 
@@ -82,7 +101,7 @@ const enrollmentSlice = createSlice({
             state.status = "idle";
             state.error = null;
             state.lastEnrollment = null;
-        },
+        }, 
     },
     extraReducers: (builder) => {
         builder
@@ -93,6 +112,7 @@ const enrollmentSlice = createSlice({
             .addCase(fetchStudentEnrollments.fulfilled, (state, action) => {
                 state.fetchStatus = "idle";
                 state.enrolledCourseIds = action.payload;
+                saveToLocalStorage(action.payload);
             })
             .addCase(fetchStudentEnrollments.rejected, (state, action) => {
                 state.fetchStatus = "failed";
@@ -109,15 +129,25 @@ const enrollmentSlice = createSlice({
                 const courseId = action.payload.courseId;
                 if (courseId && !state.enrolledCourseIds.includes(courseId)) {
                     state.enrolledCourseIds.push(courseId);
+                    saveToLocalStorage(state.enrolledCourseIds);
                 }
             })
             .addCase(enrollInCourse.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload as string;
             })
-            .addCase(login.fulfilled, () => initialState)
-            .addCase(signup.fulfilled, () => initialState)
-            .addCase(logout, () => initialState);
+            .addCase(login.fulfilled, () => {
+                saveToLocalStorage([]);
+                return initialState;
+            })
+            .addCase(signup.fulfilled, () => {
+                saveToLocalStorage([]);
+                return initialState;
+            })
+            .addCase(logout, () => {
+                saveToLocalStorage([]);
+                return initialState;
+            });
     },
 });
 

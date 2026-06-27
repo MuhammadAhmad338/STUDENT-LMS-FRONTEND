@@ -1,10 +1,10 @@
 "use client"
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchCourses } from "@/app/lib/Slices/courses/courseSlice";
-import { enrollInCourse, fetchStudentEnrollments } from "@/app/lib/Slices/enrollments/enrollmentSlice";
+import { fetchStudentEnrollments } from "@/app/lib/Slices/enrollments/enrollmentSlice";
 import { logout } from "@/app/lib/Slices/auth/authSlice";
 
 const sidebarItems = [
@@ -30,15 +30,23 @@ export default function CoursesPage() {
   const [statusMessage, setStatusMessage] = useState("Choose a course and click View details to enroll and view information.");
 
   const studentId = user?.id;
+  const coursesFetched = useRef(false);
+  const enrollmentsFetched = useRef(false);
 
   useEffect(() => {
-    dispatch(fetchCourses());
-  }, [dispatch]);
+    if (status === "idle" && !coursesFetched.current) {
+      coursesFetched.current = true;
+      dispatch(fetchCourses());
+    }
+  }, [dispatch, status]);
 
   useEffect(() => {
     if (!studentId) return;
-    dispatch(fetchStudentEnrollments(studentId));
-  }, [dispatch, studentId]);
+    if (enrollmentFetchStatus === "idle" && !enrollmentsFetched.current) {
+      enrollmentsFetched.current = true;
+      dispatch(fetchStudentEnrollments(studentId));
+    }
+  }, [dispatch, studentId, enrollmentFetchStatus]);
 
   const handleLogout = () => {
     dispatch(logout());

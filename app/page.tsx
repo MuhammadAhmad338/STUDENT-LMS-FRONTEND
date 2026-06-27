@@ -1,5 +1,4 @@
 "use client"
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
@@ -15,9 +14,39 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("Admin");
+  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
+  const [signupSuccess, setSignupSuccess] = useState(false);
+
+  const validateEmail = (email: string): string | undefined => {
+    if (!email.trim()) return "Email is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Please enter a valid email address";
+    return undefined;
+  };
+
+  const validatePassword = (password: string): string | undefined => {
+    if (!password.trim()) return "Password is required";
+    if (password.length < 6) return "Password must be at least 6 characters";
+    return undefined;
+  };
+
+  const validateName = (name: string): string | undefined => {
+    if (!name.trim()) return "Full name is required";
+    if (name.trim().length < 2) return "Name must be at least 2 characters";
+    return undefined;
+  };
 
   const handleLogin = () => {
-    if (!email.trim() || !password.trim()) return;
+    const newErrors: { email?: string; password?: string } = {};
+    
+    newErrors.email = validateEmail(email);
+    newErrors.password = validatePassword(password);
+    
+    if (Object.values(newErrors).some(Boolean)) {
+      setErrors(newErrors);
+      return;
+    }
+    
+    setErrors({});
     dispatch(login({ email: email.trim(), password, role: role.toLowerCase() }));
   };
 
@@ -28,7 +57,18 @@ export default function Home() {
   }, [isAuthenticated, router]);
 
   const handleSignup = () => {
-    if (!name.trim() || !email.trim() || !password.trim()) return;
+    const newErrors: { email?: string; password?: string; name?: string } = {};
+    
+    newErrors.name = validateName(name);
+    newErrors.email = validateEmail(email);
+    newErrors.password = validatePassword(password);
+    
+    if (Object.values(newErrors).some(Boolean)) {
+      setErrors(newErrors);
+      return;
+    }
+    
+    setErrors({});
     dispatch(
       signup({
         fullName: name.trim(),
@@ -37,7 +77,14 @@ export default function Home() {
         department: "CS",
         role: role.toLowerCase(),
       })
-    );
+    ).then((result) => {
+      if (signup.fulfilled.match(result)) {
+        setSignupSuccess(true);
+        setMode("login");
+        setName("");
+        setPassword("");
+      }
+    });
   };
 
   return (
@@ -52,6 +99,12 @@ export default function Home() {
         <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200">
           <h2 className="text-2xl font-semibold">Welcome</h2>
           <p className="mt-2 text-sm text-slate-600">Choose login or signup, then continue to your dashboard.</p>
+          {signupSuccess && (
+            <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+              <p className="font-semibold">Account created successfully!</p>
+              <p className="mt-1">Please sign in with your credentials.</p>
+            </div>
+          )}
 
           {!isAuthenticated ? (
             <div className="mt-6 space-y-4">
@@ -78,10 +131,14 @@ export default function Home() {
                   <input
                     type="text"
                     value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white"
+                    onChange={(event) => {
+                      setName(event.target.value);
+                      if (errors.name) setErrors({ ...errors, name: undefined });
+                    }}
+                    className={`mt-1 w-full rounded-xl border px-4 py-3 text-slate-900 outline-none transition focus:bg-white ${errors.name ? 'border-rose-300 bg-rose-50 focus:border-rose-500' : 'border-slate-200 bg-slate-50 focus:border-cyan-500'}`}
                     placeholder="Aisha Khan"
                   />
+                  {errors.name && <p className="mt-1 text-xs text-rose-600">{errors.name}</p>}
                 </label>
               )}
 
@@ -90,19 +147,26 @@ export default function Home() {
                 <input
                   type="email"
                   value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white"
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                    if (errors.email) setErrors({ ...errors, email: undefined });
+                  }}
+                  className={`mt-1 w-full rounded-xl border px-4 py-3 text-slate-900 outline-none transition focus:bg-white ${errors.email ? 'border-rose-300 bg-rose-50 focus:border-rose-500' : 'border-slate-200 bg-slate-50 focus:border-cyan-500'}`}
                   placeholder="student@dotnetlms.dev"
                 />
+                {errors.email && <p className="mt-1 text-xs text-rose-600">{errors.email}</p>}
               </label>
 
               <label className="block text-sm text-slate-700">
                 Password
-                <div className="mt-1 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 transition focus-within:border-cyan-500 focus-within:bg-white">
+                <div className={`mt-1 flex items-center gap-2 rounded-xl border px-3 py-2 transition focus-within:bg-white ${errors.password ? 'border-rose-300 bg-rose-50 focus-within:border-rose-500' : 'border-slate-200 bg-slate-50 focus-within:border-cyan-500'}`}>
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={(event) => {
+                      setPassword(event.target.value);
+                      if (errors.password) setErrors({ ...errors, password: undefined });
+                    }}
                     className="w-full bg-transparent text-slate-900 outline-none"
                     placeholder="••••••••"
                   />
@@ -114,6 +178,7 @@ export default function Home() {
                     {showPassword ? "Hide" : "Show"}
                   </button>
                 </div>
+                {errors.password && <p className="mt-1 text-xs text-rose-600">{errors.password}</p>}
               </label>
 
               <label className="block text-sm text-slate-700">
